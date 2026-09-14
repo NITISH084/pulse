@@ -1,0 +1,1 @@
+A distributed API monitoring platform that tracks API health, uptime, and performance through scheduled background workers. Built with Redis caching, RabbitMQ, JWT authentication, automated alerting, and scalable deployment.

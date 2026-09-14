@@ -1,4 +1,16 @@
-node_modules
-logs
+# Dependencies
+server/node_modules/
 
+# Environment variables
 .env
+.env.*
+!.env.example
+
+# Logs
+logs/
+server/server-logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
