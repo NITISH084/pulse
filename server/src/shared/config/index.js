@@ -11,7 +11,7 @@ const config = {
 
   // 2. MongoDB
   mongo: {
-    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/pulse',
+    uri: process.env.MONGO_URI || 'mongodb://localhost:27017/pulse',
     dbName: process.env.MONGO_DB_NAME || 'pulse',
   },
 

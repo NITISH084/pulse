@@ -55,3 +55,5 @@ class ResponseFormatter {
 
   // TODO: Add Paginated response.
 }
+
+export default ResponseFormatter;
