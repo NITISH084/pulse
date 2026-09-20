@@ -33,9 +33,25 @@ class PostgresConnection {
     return this.pool;
   }
 
+  async testConnection() {
+    let client;
+    try {
+      const pool = this.getPool();
+      client = await pool.connect();
+      const result = await client.query("SELECT NOW()");
+
+      logger.info(`PG connected successfully at ${result.rows[0].now}`)
+    } catch (error) {
+      logger.error("Failed to connect to PG", error)
+    } finally {
+      if(client){
+        client.release();
+      }
+    }
+  }
+
   // TODOs:
-  // 1. testconnection()
-  // 2. query()
+  // 1. query()
 
   async close() {
     if(this.pool){

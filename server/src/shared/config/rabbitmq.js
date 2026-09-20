@@ -35,11 +35,11 @@ class RabbitMQConnection {
       this.channel = await this.connection.createChannel();
 
       // creating Key | Queue name
-      const dlqname = `${config.rabbitmq.queue}_dlq`;//api_hits | api_hits_dlq
+      const dlqName = `${config.rabbitmq.queue}_dlq`;//api_hits | api_hits_dlq
 
       // DL queue
       await this.channel.assertQueue(
-        dlqname,
+        dlqName,
         {
           durable: true,
         }

@@ -32,6 +32,11 @@ services:
     networks:
       - pulse-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # RabbitMQ Message Queue
   rabbitmq:
@@ -71,6 +76,52 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres
+
+  pulse:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pulse
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      # MongoDB
+      MONGO_URI: mongodb://mongo:27017/pulse
+      MONGO_DB_NAME: pulse
+      # PostgresSQL
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_USER: postgres
+      PG_PASSWORD: nitish
+      PG_DATABASE: pulse_postgres
+      # RabbitMQ
+      RABBITMQ_URL: amqp://api_user:secure_password@rabbitmq:5672/pulse
+      RABBITMQ_QUEUE: api_hits
+      # Security
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRY: 24h
+      # Rate Limiting
+      RATE_LIMIT_WINDOW_MS: 60000
+      RATE_LIMIT_MAX_REQUESTS: 100
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - pulse-network
+    depends_on:
+      postgres:
+          condition: service_healthy
+      mongo:
+          condition: service_healthy
+      rabbitmq:
+          condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   postgres_data:
